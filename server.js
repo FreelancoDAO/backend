@@ -33,7 +33,7 @@ app.use(
 // Init all other stuff
 app.use(
   cors({
-    origin: "*",
+    origin: "https://freelanco-dao.vercel.app",
     credentials: true,
   })
 );
