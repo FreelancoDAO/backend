@@ -37,7 +37,7 @@ router.get("/apple-app-site-association", (req, res) => {
  * Setup routes for index
  */
 router.get("/", (req, res) => {
-  res.render("index");
+  res.status(200).send("health check done!!")
 });
 
 /*

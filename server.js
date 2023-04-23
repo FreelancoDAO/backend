@@ -8,6 +8,7 @@ const { printRequestData, errorHandler } = require("./middleware/api");
 const Moralis = require("moralis").default;
 const nodemailer = require("nodemailer");
 const path = require("path");
+const axios = require('axios');
 
 const { createProposal } = require("./controllers/proposal");
 const { updateGig } = require("./controllers/gig");
@@ -33,7 +34,7 @@ app.use(
 // Init all other stuff
 app.use(
   cors({
-    origin: "https://freelanco-dao.vercel.app",
+    origin: "*",
     credentials: true,
   })
 );
@@ -519,3 +520,17 @@ Gig_contract.on("GigMinted", (freelancerAddress, tokenUri, tokenId) => {
   console.log("GIG EVENT: ", freelancerAddress, tokenUri, Number(tokenId._hex));
   updateGig(freelancerAddress, tokenUri, Number(tokenId._hex));
 });
+
+
+
+function hitApi() {
+  axios.get("https://freelanco-dao-api.onrender.com/")
+    .then(response => {
+      console.log('API response:', response.data);
+    })
+    .catch(error => {
+      console.error('Error hitting API:', error);
+    });
+}
+hitApi();
+setInterval(hitApi, 10 * 60 * 1000);
