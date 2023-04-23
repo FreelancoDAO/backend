@@ -524,7 +524,7 @@ Gig_contract.on("GigMinted", (freelancerAddress, tokenUri, tokenId) => {
 
 
 function hitApi() {
-  axios.get("https://freelanco-dao-api.onrender.com/")
+  axios.get("http://127.0.0.1:10000/")
     .then(response => {
       console.log('API response:', response.data);
     })
