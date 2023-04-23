@@ -5,7 +5,6 @@ const Freelancer = require("../../models/freelancer");
 const Gig = require("../../models/gig");
 
 const getProposalByStatus = async (req, res) => {
-
   try {
     console.log("PRPOSAL");
     let proposals;
@@ -16,17 +15,13 @@ const getProposalByStatus = async (req, res) => {
         isDeleted: false,
         isActive: true,
       });
-
     } else {
       proposals = await Proposal.find({
         client_address: req.user.wallet_address,
         isDeleted: false,
         isActive: true,
       });
-      
     }
-
-
 
     const proposalWithUserData = await Promise.all(
       proposals.map(async (proposal) => {
@@ -35,7 +30,7 @@ const getProposalByStatus = async (req, res) => {
         if (proposal?.gig_token_id != null) {
           console.log("ssss");
           const gig_detail = await Gig.findOne({
-            gig_token_id: proposal.gig_token_id,
+            tokenId: proposal.gig_token_id,
             isDeleted: false,
             isActive: true,
           });
