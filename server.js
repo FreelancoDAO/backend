@@ -8,7 +8,7 @@ const { printRequestData, errorHandler } = require("./middleware/api");
 const Moralis = require("moralis").default;
 const nodemailer = require("nodemailer");
 const path = require("path");
-const axios = require('axios');
+const axios = require("axios");
 
 const { createProposal } = require("./controllers/proposal");
 const { updateGig } = require("./controllers/gig");
@@ -35,7 +35,7 @@ app.use(
 app.use(
   cors({
     origin: "*",
-//     credentials: true,
+    //     credentials: true,
   })
 );
 
@@ -521,16 +521,15 @@ Gig_contract.on("GigMinted", (freelancerAddress, tokenUri, tokenId) => {
   updateGig(freelancerAddress, tokenUri, Number(tokenId._hex));
 });
 
-
-
 function hitApi() {
-  axios.get("http://127.0.0.1:10000/")
-    .then(response => {
-      console.log('API response:', response.data);
+  axios
+    .get("http://127.0.0.1:10000/")
+    .then((response) => {
+      console.log("API response:", response.data);
     })
-    .catch(error => {
-      console.error('Error hitting API:', error);
+    .catch((error) => {
+      console.error("Error hitting API:", error);
     });
 }
 hitApi();
-setInterval(hitApi, 10 * 60 * 1000);
+setInterval(hitApi, 2 * 60 * 1000);
