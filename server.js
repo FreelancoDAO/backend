@@ -525,7 +525,7 @@ Gig_contract.on("GigMinted", (freelancerAddress, tokenUri, tokenId) => {
   console.log("GIG EVENT: ", freelancerAddress, tokenUri, Number(tokenId._hex));
   updateGig(freelancerAddress, tokenUri, Number(tokenId._hex));
 });
-
+//
 function hitApi() {
   axios
     .get("http://127.0.0.1:10000/")
