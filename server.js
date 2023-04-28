@@ -170,7 +170,7 @@ io.on("connection", async (socket) => {
     callback(returnData);
   });
 
-  socket.on("start_conversation", async (data) => {
+  socket.on("start_conversation", async (data, callback) => {
     // data: {to: from:}
 
     const { to, from, gig_token_id } = data;
@@ -184,6 +184,7 @@ io.on("connection", async (socket) => {
     }).populate("participants", "firstName lastName _id email status");
 
     console.log(existing_conversations[0], "Existing Conversation");
+    let updated_conversations = [...existing_conversations];
 
     // if no => create a new OneToOneMessage doc & emit event "start_chat" & send conversation details as payload
     if (existing_conversations.length === 0) {
@@ -191,13 +192,17 @@ io.on("connection", async (socket) => {
         participants: [to, from],
         gig_token_id: gigId,
       });
+      updated_conversations.push(new_chat);
 
-      new_chat = await OneToOneMessage.findById(new_chat).populate(
-        "participants",
-        "firstName lastName _id email status"
-      );
+      console.log("up", updated_conversations);
+      callback(updated_conversations);
 
-      socket.emit("start_chat", new_chat);
+      // new_chat = await OneToOneMessage.findById(new_chat).populate(
+      //   "participants",
+      //   "firstName lastName _id email status"
+      // );
+
+      // socket.emit("start_chat", new_chat);
     }
     // if yes => just emit event "start_chat" & send conversation details as payload
     else {
