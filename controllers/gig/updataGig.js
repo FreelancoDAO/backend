@@ -31,7 +31,7 @@ const updateGig = async (freelancerAddress, tokenUri, tokenId) => {
 
   try {
     console.log("GETING DATA FROM IPFS: ");
-    const update_gig = await Gig.findOneAndUpdate(tokenUri, { tokenId });
+    const update_gig = await Gig.findOneAndUpdate({tokenUri}, { tokenId });
     if (update_gig) {
       console.log("Gig saved successfully");
     }
