@@ -9,13 +9,15 @@ const {
   getGigByCategory,
   popularGigs,
   updateReviews,
+  findGigById
 } = require("../controllers/gig");
 
 router.post("/", verifyToken, createGig);
 router.get("/", verifyToken, getAllGigs);
-router.get("/getGigsByUserId", verifyToken, getGigsByUserId);
+router.get("/:id", findGigById);
+router.post("/getGigsByUserId", verifyToken, getGigsByUserId);
 router.post("/getGigByCategory", getGigByCategory);
-router.get("/popularGigs", popularGigs);
+router.get("/popularGigs/all", popularGigs);
 router.post("/:id/reviews", verifyToken, updateReviews);
 
 module.exports = router;

@@ -5,6 +5,7 @@ const { getGigByCategory } = require("./getGigByCategory");
 const { popularGigs } = require("./popularGigs");
 const { updateGig } = require("./updataGig");
 const { updateReviews } = require("./updateReviews");
+const { findGigById } = require("./findGigById");
 
 module.exports = {
   createGig,
@@ -13,5 +14,6 @@ module.exports = {
   getGigByCategory,
   popularGigs,
   updateGig,
-  updateReviews
+  updateReviews,
+  findGigById
 };
