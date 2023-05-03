@@ -29,11 +29,13 @@ const getGigsByUserId = async (req, res) => {
           rating: 1,
           plans: 1,
           tokenId: 1,
+          awsImageLink: 1,
           freelancer: {
             _id: "$freelancer._id",
             name: "$freelancer.name",
             ipfsImageHash: "$freelancer.ipfsImageHash",
-            isTopRated: "$freelancer.isTopRated"
+            isTopRated: "$freelancer.isTopRated",
+            awsImageLink: "$freelancer.awsImageLink"
           }
         }
       }

@@ -3,6 +3,7 @@ const User = require("../../models/user");
 const { createItem } = require("../../middleware/db");
 const mongoose = require("mongoose");
 const { findUserById, generateToken } = require("../auth/helpers");
+const { sendJoiningStatus } = require("../../utils/email");
 
 const addFreelancer = async (req, res) => {
   // try {
@@ -18,6 +19,7 @@ const addFreelancer = async (req, res) => {
   const data2 = await findUserById(user_id);
   console.log(data2);
   const token = generateToken(data2);
+  sendJoiningStatus({ name: freelancer.name, email: freelancer.email });
   res.status(200).send({ token });
   // } catch (err) {
   //   console.log(err);

@@ -5,105 +5,132 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <title>Deify</title>
+  <title>Freelanco</title>
   <style type="text/css">
-      body {
-          font-family: Avenir Next LT W01 Bold,sans-serif;
-      }
+    body {
+      font-family: 'Roboto', sans-serif;
+      background-color: #f5f5f5;
+    }
+
+    .main-table {
+      padding: 40px 50px;
+    }
+
+    .main-content {
+      background-color: #ffffff;
+      padding: 40px 60px;
+      border-radius: 16px;
+      text-align: center;
+    }
+
+    .logo {
+      width: 130px;
+      height: 130px;
+      border-radius: 50%;
+      background-image: url('https://cdn.discordapp.com/attachments/997260968411279410/1102936398530609183/BettyJones_Summarize_the_strengths_of_a_hardworking_finance_ind_a87c2ca1-55bd-45da-988e-021fb47235e6.png');
+      background-size: cover;
+    }
+
+    h1,
+    h3,
+    p {
+      color: #444444;
+      margin: 0;
+      line-height: 1.5;
+    }
+
+    h1 {
+      font-size: 36px;
+      font-weight: bold;
+    }
+
+    h3 {
+      font-size: 24px;
+      font-weight: 500;
+      margin-top: 20px;
+    }
+
+    p {
+      font-size: 16px;
+      margin-top: 10px;
+    }
+
+    a {
+      color: #007bff;
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+
+    .footer {
+      font-size: 14px;
+      color: #888888;
+      margin-top: 30px;
+    }
+
+    @media only screen and (max-width: 995px) {
       .main-table {
-          padding: 40px 50px;
+        padding: 30px 30px;
       }
+
       .main-content {
-          padding: 40px 60px;
+        padding: 40px 40px;
       }
+
       .logo {
-        width: 130px; 
-        height: 130px;
+        width: 100px !important;
+        height: 100px !important;
       }
-      .list {
-          display: block;
-          padding-left: 15px;
-          max-width: 90%;  
+
+      .footer {
+        margin-top: 20px;
       }
-      .list ul {
-          columns: 3;
-          padding-left: 15px;
+    }
+
+    @media only screen and (max-width: 620px) {
+      .main-table {
+        padding: 30px 10px;
       }
-      .list ul li {
-        font-size: 14px;
-        line-height: 16px;
+
+      .main-content {
+        padding: 30px 30px;
       }
-      @media only screen and (max-width:995px) {
-        .main-table {
-            padding: 30px 30px;
-        }
-        .main-content {
-            padding: 40px 40px;
-        }  
-        .logo {
-            width: 100px !important;
-            height: 100px !important;
-        }
-        .list {
-            max-width: 80%;
-            padding-left: 10px;
-        }
-        .list ul {
-            columns: 2;
-        }
+
+      .logo {
+        width: 70px !important;
+        height: 70px !important;
       }
-      @media only screen and (max-width:620px) {
-        .main-table {
-            padding: 30px 10px;
-        }
-        .main-content {
-            padding: 30px 30px;
-        }  
-        .list {
-            max-width: 100%;
-        }
-        .logo {
-            width: 70px !important;
-            height: 70px !important;
-        }
-        .list ul {
-            columns: 1;
-        }
-      }
+    }
   </style>
 </head>
 
 <body>
-   <table style="width: 100%; background-color : #2a3042;" class="main-table">
-        <tr valign = "middle" style="width: 100%;">
-            <td style="width:100%;">
-                <table class="main-content" style="background-color: white; width: 100%; border-radius: 16px;">
-                    <tr style = "width: 100%;" valign="middle">
-                        <td style="display: inline-flex;">
-                            <span class="logo" style = "background-image: url('https://deifytest.s3.amazonaws.com/userprofile/6194d9536091e770bb28b6e3.png');object-fit: fill;pointer-events: none; background-repeat: no-repeat;background-size: 100% 100%;"></span>
-                        </td>
-                        <td style="display : inline;">
-                            <h1 style="display: inline-block; margin-top: 0px; margin-bottom: 0px; font-size: 30px; line-height: 34px; margin-left: 10px;">Freelanco</h1>
-                        </td>
-                    </tr>
-                    <tr style="display: block; margin-top: 20px; ">
-                        <td>
-                            <h3>Hi,</h3>
-                        </td>
-                    </tr>
-                    <tr style="display: block; padding-left: 10px;">
-                        <td>
-                            <h3 style="font-weight: 500;">Click this link to verify your email address:</h3>
-                        </td>
-                    </tr>
-                    <tr style="display: block; width: 100%;">
-                        <td class="list">
-                           <p><a href="<%= url %>" style=" text-decoration: underline;text-underline-position: under; ">click here</a></p>
-                        </td>
-                    </tr>
-                </table>
+  <table style="width: 100%;" class="main-table">
+    <tr valign="middle">
+      <td>
+        <table class="main-content">
+          <tr valign="middle">
+            <td>
+              <div class="logo"></div>
             </td>
-        </tr>
-   </table> 
-</body>
+          </tr>
+          <tr>
+            <td>
+              <h3>Hi <%= name %> </h3>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <h3> Thanks for joining us as a freelancer!</h3>
+              <p>We're excited to have you onboard and look forward to working with you on future projects.</p>
+              <p>If you have any questions or concerns, please don't hesitate to reach out to us at <a href="freelancodao@protonmail.com">freelancodao@protonmail.com</a>.</p>
+              <p>Thank you for choosing Freelanco 🙂.</p>
+            </td>
+          </tr>
+            </table>
+        </td>
+    </tr>
+</table>
 </html>

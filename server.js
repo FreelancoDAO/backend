@@ -17,6 +17,8 @@ const Freelancer = require("./models/freelancer");
 const Dao = require("./models/dao");
 const OneToOneMessage = require("./models/oneToOneMessage");
 const User = require("./models/user");
+const { newMessage } = require("./utils/email");
+
 
 app.use(
   bodyParser.json({
@@ -39,6 +41,9 @@ app.use(
   })
 );
 
+ initMongo();
+
+
 // eslint-disable-next-line
 app.use(function (req, res, next) {
   res.setHeader("Access-Control-Allow-Origin", "*");
@@ -59,6 +64,7 @@ app.use(function (req, res, next) {
   next();
 });
 app.use(printRequestData);
+
 
 app.get("/images/:filename", (req, res) => {
   const filename = req.params.filename;
@@ -99,19 +105,9 @@ const io = new Server(server, {
   },
 });
 
-server.listen(port, () => {
-  console.log(`App running on port ${port} ...`);
-});
 
-const startServer = async () => {
-  await Moralis.start({
-    apiKey: "67SOYN6KCquIzgxMK6XqyFm28Chbd4zPzccfATvlsQNy5MZ4S3iY3k9irfWaTv1L",
-  });
-};
-startServer();
 // app.use("/user", userRouter);
 
-initMongo();
 
 // Add this
 // Listen for when the client connects via socket.io-client
@@ -252,9 +248,19 @@ io.on("connection", async (socket) => {
 
     // fetch OneToOneMessage Doc & push a new message to existing conversation
     const chat = await OneToOneMessage.findById(conversation_id);
+    if (!chat?.messages?.length) {
+      const [freelancer] = await Freelancer.find({ wallet_address: to });
+      const user = {
+        email: freelancer.email,
+        name: freelancer.name,
+        client: from,
+        message: message
+      }
+      newMessage(user);
+    }
 
     if (!to) {
-      console.log("H");
+   
 
       const instance = await Dao.find({ wallet_address: from });
       console.log("IN", instance.length > 0);
@@ -317,6 +323,16 @@ io.on("connection", async (socket) => {
   // emit outgoing_message -> from user
   // });
 });
+
+server.listen(port, () => {
+  console.log(`App running on port ${port} ...`);
+});
+const startServer = async () => {
+  await Moralis.start({
+    apiKey: "67SOYN6KCquIzgxMK6XqyFm28Chbd4zPzccfATvlsQNy5MZ4S3iY3k9irfWaTv1L",
+  });
+};
+startServer();
 
 const { ethers } = require("ethers");
 
@@ -526,15 +542,15 @@ Gig_contract.on("GigMinted", (freelancerAddress, tokenUri, tokenId) => {
   updateGig(freelancerAddress, tokenUri, Number(tokenId._hex));
 });
 //
-function hitApi() {
-  axios
-    .get("http://127.0.0.1:10000/")
-    .then((response) => {
-      console.log("API response:", response.data);
-    })
-    .catch((error) => {
-      console.error("Error hitting API:", error);
-    });
-}
-hitApi();
-setInterval(hitApi, 2 * 60 * 1000);
+// function hitApi() {
+//   axios
+//     .get("http://127.0.0.1:10000/")
+//     .then((response) => {
+//       console.log("API response:", response.data);
+//     })
+//     .catch((error) => {
+//       console.error("Error hitting API:", error);
+//     });
+// }
+// hitApi();
+// setInterval(hitApi, 2 * 60 * 1000);

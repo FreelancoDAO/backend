@@ -27,11 +27,13 @@ const popularGigs = async (req, res) => {
           title: 1,
           rating: 1,
           plans: 1,
+          awsImageLink: 1,
           freelancer: {
             _id: "$freelancer._id",
             name: "$freelancer.name",
             ipfsImageHash: "$freelancer.ipfsImageHash",
-            isTopRated: "$freelancer.isTopRated"
+            isTopRated: "$freelancer.isTopRated",
+            awsImageLink: "$freelancer.awsImageLink"
           }
         }
       }

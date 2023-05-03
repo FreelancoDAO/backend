@@ -30,6 +30,9 @@ const gigSchema = new mongoose.Schema(
     tokenUri: {
       type: String,
     },
+    awsImageLink: {
+      type: String,
+    },
     tokenId: {
       type: Number,
     },

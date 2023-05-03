@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Freelanco</title>
+  <style type="text/css">
+    body {
+      font-family: 'Roboto', sans-serif;
+      background-color: #f5f5f5;
+    }
+
+    .main-table {
+      padding: 40px 50px;
+    }
+
+    .main-content {
+      background-color: #ffffff;
+      padding: 40px 60px;
+      border-radius: 16px;
+      text-align: center;
+    }
+
+    .logo {
+      width: 130px;
+      height: 130px;
+      border-radius: 50%;
+      background-image: url('https://cdn.discordapp.com/attachments/997260968411279410/1102936398530609183/BettyJones_Summarize_the_strengths_of_a_hardworking_finance_ind_a87c2ca1-55bd-45da-988e-021fb47235e6.png');
+      background-size: cover;
+    }
+
+    h1,
+    h3,
+    p {
+      color: #444444;
+      margin: 0;
+      line-height: 1.5;
+    }
+
+    h1 {
+      font-size: 36px;
+      font-weight: bold;
+    }
+
+    h3 {
+      font-size: 24px;
+      font-weight: 500;
+      margin-top: 20px;
+    }
+
+    p {
+      font-size: 16px;
+      margin-top: 10px;
+    }
+
+    a {
+      color: #007bff;
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+
+    .footer {
+      font-size: 14px;
+      color: #888888;
+      margin-top: 30px;
+    }
+
+    @media only screen and (max-width: 995px) {
+      .main-table {
+        padding: 30px 30px;
+      }
+
+      .main-content {
+        padding: 40px 40px;
+      }
+
+      .logo {
+        width: 100px !important;
+        height: 100px !important;
+      }
+
+      .footer {
+        margin-top: 20px;
+      }
+    }
+
+    @media only screen and (max-width: 620px) {
+      .main-table {
+        padding: 30px 10px;
+      }
+
+      .main-content {
+        padding: 30px 30px;
+      }
+
+      .logo {
+        width: 70px !important;
+        height: 70px !important;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <table style="width: 100%;" class="main-table">
+    <tr valign="middle">
+      <td>
+        <table class="main-content">
+          <tr valign="middle">
+            <td>
+              <div class="logo"></div>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <h3>Hi <%= name %> </h3>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <%- message %>
+              <p>If you have any questions or concerns, please don't hesitate to reach out to us at <a href="freelancodao@protonmail.com">freelancodao@protonmail.com</a>.</p>
+              <p>Thank you for choosing Freelanco 🙂.</p>
+            </td>
+          </tr>
+            </table>
+        </td>
+    </tr>
+</table>
+</html>
