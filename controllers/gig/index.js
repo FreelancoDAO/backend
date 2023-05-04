@@ -6,6 +6,7 @@ const { popularGigs } = require("./popularGigs");
 const { updateGig } = require("./updataGig");
 const { updateReviews } = require("./updateReviews");
 const { findGigById } = require("./findGigById");
+const { getGigsBySearch } = require("./getGigsBySearch");
 
 module.exports = {
   createGig,
@@ -15,5 +16,6 @@ module.exports = {
   popularGigs,
   updateGig,
   updateReviews,
-  findGigById
+  findGigById,
+  getGigsBySearch,
 };
