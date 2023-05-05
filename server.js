@@ -18,6 +18,7 @@ const Dao = require("./models/dao");
 const OneToOneMessage = require("./models/oneToOneMessage");
 const User = require("./models/user");
 const { newMessage } = require("./utils/email");
+const { sentProposalUpdateOverMail } = require("./controllers/proposal");
 
 
 app.use(
@@ -41,7 +42,7 @@ app.use(
   })
 );
 
- initMongo();
+initMongo();
 
 
 // eslint-disable-next-line
@@ -499,9 +500,11 @@ Freelanco_contract.on("OfferStatusUpdated", (_offerId, _status) => {
     try {
       const result = await Proposal.updateOne(
         { offerId: data.offerId },
-        { $set: { status: updateStatusMappig[_status] } }
-      ).then((result) => {
-        console.log(`${result.modifiedCount} document(s) updated`);
+        { $set: { status: updateStatusMappig[_status] } },
+        { new: true }
+      ).then(async (result) => {
+        await sentProposalUpdateOverMail(result);
+        console.log(`document updated`);
       });
       console.log(result);
     } catch (e) {
@@ -518,9 +521,11 @@ Freelanco_contract.on("ContractDisputed", (offerId, proposalId, reason) => {
     try {
       const result = await Proposal.updateOne(
         { offerId: data.offerId },
-        { $set: { proposalId: data.proposalId, reason: data.reason } }
-      ).then((result) => {
-        console.log(`${result.modifiedCount} document(s) updated`);
+        { $set: { proposalId: data.proposalId, reason: data.reason } },
+        { new: true }
+      ).then(async (result) => {
+        await sentProposalUpdateOverMail(result);
+        console.log(`document updated`);
       });
       console.log(result);
     } catch (e) {

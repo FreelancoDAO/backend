@@ -1,6 +1,6 @@
 const { createItem } = require("../../middleware/db");
 const Proposal = require("../../models/proposal");
-const { newProposal } = require("../../utils/email");
+const { proposalMail } = require("../../utils/email");
 const Freelancer = require("../../models/freelancer");
 const createProposal = async (data) => {
   try {
@@ -18,7 +18,7 @@ const createProposal = async (data) => {
         name: freelancer.name,
         email: freelancer.email,
       }
-      newProposal(user, subject, message);
+      proposalMail(user, subject, message);
     } else {
       console.log("proposal already exists");
     }

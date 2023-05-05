@@ -139,7 +139,7 @@ const newMessage = async (user = {}) => {
 };
 
 
-const newProposal = async (user = {}, subject, message) => {
+const proposalMail = async (user = {}, subject, message) => {
   console.log(user);
 
   const htmlMessage = await ejs.renderFile(
@@ -189,6 +189,6 @@ const newProposal = async (user = {}, subject, message) => {
 
 
 module.exports = {
-  prepareToSendEmail, sendEmail, sendJoiningStatus, newMessage, newProposal
+  prepareToSendEmail, sendEmail, sendJoiningStatus, newMessage, proposalMail
   // sendRegistrationEmailMessage, sendResetPasswordEmailMessage 
 };

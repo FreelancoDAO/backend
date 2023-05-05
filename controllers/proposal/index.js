@@ -4,6 +4,7 @@ const { updateStatus } = require("./updateStatus");
 const { getProposalOfDao } = require("./getProposalOfDao");
 const { getTreasuryOfDao } = require("./getTreasuryOfDao");
 const { getOrders } = require("./getOrders");
+const { sentProposalUpdateOverMail } = require("./sentProposalUpdateOverMail");
 
 module.exports = {
   createProposal,
@@ -12,4 +13,5 @@ module.exports = {
   getProposalOfDao,
   getTreasuryOfDao,
   getOrders,
+  sentProposalUpdateOverMail
 };
