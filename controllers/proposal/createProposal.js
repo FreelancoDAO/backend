@@ -2,6 +2,7 @@ const { createItem } = require("../../middleware/db");
 const Proposal = require("../../models/proposal");
 const { proposalMail } = require("../../utils/email");
 const Freelancer = require("../../models/freelancer");
+const { addNotification } = require("../../controllers/notification");
 const createProposal = async (data) => {
   try {
     console.log(data);
@@ -18,6 +19,11 @@ const createProposal = async (data) => {
         name: freelancer.name,
         email: freelancer.email,
       }
+      await addNotification({
+        wallet_address: data?.freelancer_address,
+        message: `congrats ! you have received a new proposal from ${data.client_address}`,
+        link: '/messages/123',
+      });
       proposalMail(user, subject, message);
     } else {
       console.log("proposal already exists");

@@ -19,7 +19,8 @@ const OneToOneMessage = require("./models/oneToOneMessage");
 const User = require("./models/user");
 const { newMessage } = require("./utils/email");
 const { sentProposalUpdateOverMail } = require("./controllers/proposal");
-
+const { addNotification } = require("./controllers/notification");
+const { upload } = require("./utils/s3Upload");
 
 app.use(
   bodyParser.json({
@@ -258,10 +259,15 @@ io.on("connection", async (socket) => {
         message: message
       }
       newMessage(user);
+      await addNotification({
+        wallet_address: to,
+        message: `you got a message from ${from}`,
+        link: '/messages/123',
+      })
     }
 
     if (!to) {
-   
+
 
       const instance = await Dao.find({ wallet_address: from });
       console.log("IN", instance.length > 0);
@@ -300,29 +306,35 @@ io.on("connection", async (socket) => {
   });
 
   // // handle Media/Document Message
-  // socket.on("file_message", (data) => {
-  //   console.log("Received message:", data);
+  socket.on("file_message", async (data, callback) => {
+    console.log("Received message:", data);
+    const opts = {};
+    opts.fileName = `${Date.now()}.${data.filename}`;
+    opts.folderName = 'chat_document';
+    opts.mime = data.mimetype;
+    const awsUpload = await upload(data.buffer, opts);
+    console.log(awsUpload);
+    callback(awsUpload.Location);
+    // data: {to, from, text, file}
 
-  //   // data: {to, from, text, file}
+    // Get the file extension
+    // const fileExtension = path.extname(data.file.name);
 
-  //   // Get the file extension
-  //   const fileExtension = path.extname(data.file.name);
+    // // Generate a unique filename
+    // const filename = `${Date.now()}_${Math.floor(
+    //   Math.random() * 10000
+    // )}${fileExtension}`;
 
-  //   // Generate a unique filename
-  //   const filename = `${Date.now()}_${Math.floor(
-  //     Math.random() * 10000
-  //   )}${fileExtension}`;
+    // upload file to AWS s3
 
-  // upload file to AWS s3
+    // create a new conversation if its dosent exists yet or add a new message to existing conversation
 
-  // create a new conversation if its dosent exists yet or add a new message to existing conversation
+    // save to db
 
-  // save to db
+    // emit incoming_message -> to user
 
-  // emit incoming_message -> to user
-
-  // emit outgoing_message -> from user
-  // });
+    // emit outgoing_message -> from user
+  });
 });
 
 server.listen(port, () => {
@@ -525,6 +537,7 @@ Freelanco_contract.on("ContractDisputed", (offerId, proposalId, reason) => {
         { new: true }
       ).then(async (result) => {
         await sentProposalUpdateOverMail(result);
+
         console.log(`document updated`);
       });
       console.log(result);
