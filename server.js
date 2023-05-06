@@ -508,6 +508,14 @@ Freelanco_contract.on("OfferStatusUpdated", (_offerId, _status) => {
       5: "Over_By_Freelancer",
       6: "Over_By_Client",
       7: "Dispute_Over",
+      // 0: "Sent to freelancer",
+      // 1: "Accepted by freelancer",
+      // 2: "Rejected by freelancer",
+      // 3: "Completed by freelancer",
+      // 4: "Successfully approved by client ",
+      // 5: "Disputed by Freelancer",
+      // 6: "Disputed by Client",
+      // 7: "Dispute Over",
     };
     try {
       const result = await Proposal.updateOne(

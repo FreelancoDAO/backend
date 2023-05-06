@@ -16,17 +16,17 @@ const addFreelancer = async (req, res) => {
       {
         _id: mongoose.Types.ObjectId(user_id),
       },
-      { $set: { freelancer_ref: mongoose.Types.ObjectId(freelancer._id) } }
+      { $set: { freelancer_ref: mongoose.Types.ObjectId(freelancer._id) } },
+      { new: true }
     );
-    const data2 = await findUserById(user_id);
-    const token = generateToken(data2);
+    const updated_user = { ...user._doc, freelancer: freelancer }
     sendJoiningStatus({ name: freelancer.name, email: freelancer.email });
     await addNotification({
       wallet_address: user?.wallet_address,
       message: "congrats for becoming a freelancer with us!",
       link: '/messages/123',
     })
-    res.status(200).send({ token });
+    res.status(200).send({ freelancer: updated_user });
   } catch (err) {
     console.log(err);
     res.status(400).json(err);
