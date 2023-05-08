@@ -2,7 +2,7 @@ const Notification = require("../../models/notification");
 
 const getNotification = async (req, res) => {
 
-  Notification.find({ wallet_address: req.user?.wallet_address })
+  Notification.find({ wallet_address: req.user?.wallet_address, read: false })
     .sort({ createdAt: -1 })
     .limit(10)
     .exec((err, notifications) => {
