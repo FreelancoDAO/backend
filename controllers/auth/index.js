@@ -1,7 +1,7 @@
 const { register } = require("./register");
 const { validateUser } = require("./validateUser");
 const { login } = require("./login");
-const { getRefreshToken } = require("./getRefreshToken");
+const { getFullProfile } = require("./getFullProfile");
 const { moralisLogin } = require("./moralisLogin");
 const { moralisVerify } = require("./moralisVerify");
 const {emailVerified}=require('./emailVerified');
@@ -11,7 +11,7 @@ module.exports = {
   register,
   validateUser,
   login,
-  getRefreshToken,
+  getFullProfile,
   moralisLogin,
   moralisVerify,
   emailVerified,

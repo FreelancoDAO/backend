@@ -6,7 +6,7 @@ const { decrypt } = require("../../middleware/auth");
 const verifyToken = async (req, res, next) => {
   const bearerHeader = req.headers["authorization"];
   if (!bearerHeader) {
-    return res.status(403).send("token is not found");
+    return res.status(403).send("token not found");
   }
   const token = bearerHeader.split(" ")[1].trim();
   try {

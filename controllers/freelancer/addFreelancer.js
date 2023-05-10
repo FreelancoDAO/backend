@@ -7,6 +7,9 @@ const { findUserById, generateToken } = require("../auth/helpers");
 const { sendJoiningStatus } = require("../../utils/email");
 const { addNotification } = require("../notification");
 
+
+
+
 const addFreelancer = async (req, res) => {
   try {
     const user_id = req.user._id;
@@ -26,7 +29,8 @@ const addFreelancer = async (req, res) => {
       message: "congrats for becoming a freelancer with us!",
       link: '/messages/123',
     })
-    res.status(200).send({ freelancer: updated_user });
+    const token = generateToken(updated_user);
+    res.status(200).send({ freelancer: updated_user, token: token });
   } catch (err) {
     console.log(err);
     res.status(400).json(err);
