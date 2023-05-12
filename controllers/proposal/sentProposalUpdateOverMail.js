@@ -48,7 +48,8 @@ const sentProposalUpdateOverMail = async (data) => {
     };
 
     await OneToOneMessage.findOneAndUpdate({
-     participants: { $size: 2, $all: [proposal?.freelancer_address, proposal?.client_address] },
+      participants: { $size: 2, $all: [proposal?.freelancer_address, proposal?.client_address] },
+      offer_id: data.offerId
     }, {
       $push: { messages: new_message }
     })
