@@ -55,8 +55,8 @@ const getProposalByStatus = async (req, res) => {
             isActive: true,
           });
 
-          console.log("Freelancer", freelancer);
-          console.log("proposalData.gig_detail", proposalData.gig_detail);
+          // console.log("Freelancer", freelancer);
+          // console.log("proposalData.gig_detail", proposalData.gig_detail);
           const returnData = {
             ...proposalData,
             gig_detail: {

@@ -9,6 +9,9 @@ const oneToOneMessageSchema = new mongoose.Schema({
   gig_token_id: {
     type: Number,
   },
+  offer_id: {
+    type: String,
+  },
   messages: [
     {
       to: {
@@ -19,7 +22,7 @@ const oneToOneMessageSchema = new mongoose.Schema({
       },
       type: {
         type: String,
-        enum: ["Text", "Media", "Document", "Link"],
+        enum: ["Text", "Media", "Document", "Link","Offer"],
       },
       created_at: {
         type: Date,

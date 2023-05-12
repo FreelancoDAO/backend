@@ -210,9 +210,13 @@ io.on("connection", async (socket) => {
 
   socket.on("get_messages_by_gig_id", async (data, callback) => {
     console.log("DATA: ", data);
-    const messages = await OneToOneMessage.find({
-      gig_token_id: data.gig_token_id,
+
+    let messages = await OneToOneMessage.findOne({
+      offer_id: data.offer_id,
     });
+    const proposal = await Proposal.findOne({ offer_id: data.offer_id });
+    messages = { ...messages._doc, client_address: proposal?.client_address, freelancer_address: proposal?.freelancer_address }
+    console.log(messages);
     callback(messages);
   });
 
@@ -250,36 +254,37 @@ io.on("connection", async (socket) => {
 
     // fetch OneToOneMessage Doc & push a new message to existing conversation
     const chat = await OneToOneMessage.findById(conversation_id);
-    if (!chat?.messages?.length) {
-      const [freelancer] = await Freelancer.find({ wallet_address: to });
-      const user = {
-        email: freelancer.email,
-        name: freelancer.name,
-        client: from,
-        message: message
-      }
-      newMessage(user);
-      await addNotification({
-        wallet_address: to,
-        message: `you got a message from ${from}`,
-        link: '/messages/123',
-      })
-    }
+
 
     if (!to) {
-
 
       const instance = await Dao.find({ wallet_address: from });
       console.log("IN", instance.length > 0);
       if (instance.length > 0) {
         console.log("pushing");
         chat.dao_messages.push(new_message);
-      } else {
-        callback(null);
       }
-    } else {
+
+    }
+    else {
+      if (!chat?.messages?.length) {
+        const [freelancer] = await Freelancer.find({ wallet_address: to });
+        const user = {
+          email: freelancer.email,
+          name: freelancer.name,
+          client: from,
+          message: message
+        }
+        newMessage(user);
+        await addNotification({
+          wallet_address: to,
+          message: `you got a message from ${from}`,
+          link: '/messages/123',
+        })
+      }
       chat.messages.push(new_message);
     }
+
 
     // save to db`
     await chat.save({ new: true, validateModifiedOnly: true });
@@ -497,42 +502,12 @@ Freelanco_contract.on("OfferStatusUpdated", (_offerId, _status) => {
     offerId: String(_offerId._hex),
     status: _status,
   };
-
-  const updateProposal = async (data) => {
-    const updateStatusMappig = {
-      0: "Sent",
-      1: "Approved",
-      2: "Rejected",
-      3: "Completed",
-      4: "Successful",
-      5: "Over_By_Freelancer",
-      6: "Over_By_Client",
-      7: "Dispute_Over",
-      // 0: "Sent to freelancer",
-      // 1: "Accepted by freelancer",
-      // 2: "Rejected by freelancer",
-      // 3: "Completed by freelancer",
-      // 4: "Successfully approved by client ",
-      // 5: "Disputed by Freelancer",
-      // 6: "Disputed by Client",
-      // 7: "Dispute Over",
-    };
-    try {
-      const result = await Proposal.updateOne(
-        { offerId: data.offerId },
-        { $set: { status: updateStatusMappig[_status] } },
-        { new: true }
-      ).then(async (result) => {
-        await sentProposalUpdateOverMail(result);
-        console.log(`document updated`);
-      });
-      console.log(result);
-    } catch (e) {
-      console.log("E", e);
-    }
-  };
-
-  updateProposal(data);
+  try {
+    sentProposalUpdateOverMail(data);
+    console.log(`document updated`);
+  } catch (e) {
+    console.log("E", e);
+  }
 });
 
 Freelanco_contract.on("ContractDisputed", (offerId, proposalId, reason) => {
