@@ -8,7 +8,6 @@ const OneToOneMessage = require("../../models/oneToOneMessage");
 const sentProposalUpdateOverMail = async (data) => {
   try {
 
-    console.log("hoiiii");
     const updateStatusMappig = {
       0: "Sent",
       1: "Approved",
@@ -33,51 +32,56 @@ const sentProposalUpdateOverMail = async (data) => {
     //   { new: true }
     // )
 
-    const proposal = await Proposal.findOneAndUpdate(
-      { offerId: data.offerId },
-      { $set: { status: updateStatusMappig[data.status] } },
-      { new: true }
-    );
+    const proposal_status = await Proposal.findOne({ offerId: data.offerId });
 
-    const new_message = {
-      to: proposal.freelancer_address,
-      from: proposal.client_address,
-      type: 'Offer',
-      created_at: Date.now(),
-      text: `The status of your proposal has been updated to "${proposal.status}"`,
-    };
+    if (proposal_status?.status != updateStatusMappig[data.status]) {
 
-    await OneToOneMessage.findOneAndUpdate({
-      participants: { $size: 2, $all: [proposal?.freelancer_address, proposal?.client_address] },
-      offer_id: data.offerId
-    }, {
-      $push: { messages: new_message }
-    })
+      const proposal = await Proposal.findOneAndUpdate(
+        { offerId: data.offerId },
+        { $set: { status: updateStatusMappig[data.status] } },
+        { new: true }
+      );
+
+      const new_message = {
+        to: proposal.freelancer_address,
+        from: proposal.client_address,
+        type: 'Offer',
+        created_at: Date.now(),
+        text: `The status of your proposal has been updated to "${proposal.status}"`,
+      };
+
+      await OneToOneMessage.findOneAndUpdate({
+        participants: { $size: 2, $all: [proposal?.freelancer_address, proposal?.client_address] },
+        offer_id: data.offerId
+      }, {
+        $push: { messages: new_message }
+      })
 
 
-    const freelancer = await Freelancer.findOne({ wallet_address: proposal?.freelancer_address });
-    console.log("free", freelancer);
-    const gig = await Gig.findOne({ tokenId: proposal?.gig_token_id });
-    await addNotification({
-      wallet_address: proposal?.freelancer_address,
-      message: `The status of your proposal for project "${gig?.title}" has been updated to "${proposal.status}"`,
-      link: '/messages/123',
-    });
-    await addNotification({
-      wallet_address: proposal?.client_address,
-      message: `The status of your proposal for project "${gig?.title}" has been updated to "${proposal.status}"`,
-      link: '/messages/123',
-    });
-    const subject = 'Project Update';
-    const message = `<p>The status of your proposal for project <strong>${gig?.title}</strong> has been updated to <strong>${proposal.status}</strong>.</p>
+      const freelancer = await Freelancer.findOne({ wallet_address: proposal?.freelancer_address });
+      console.log("free", freelancer);
+      const gig = await Gig.findOne({ tokenId: proposal?.gig_token_id });
+      await addNotification({
+        wallet_address: proposal?.freelancer_address,
+        message: `The status of your proposal for project "${gig?.title}" has been updated to "${proposal.status}"`,
+        link: '/messages/123',
+      });
+      await addNotification({
+        wallet_address: proposal?.client_address,
+        message: `The status of your proposal for project "${gig?.title}" has been updated to "${proposal.status}"`,
+        link: '/messages/123',
+      });
+      const subject = 'Project Update';
+      const message = `<p>The status of your proposal for project <strong>${gig?.title}</strong> has been updated to <strong>${proposal.status}</strong>.</p>
 <p>Please log in to your account to view the updated status and any messages or comments from the client or freelancer.</p>
 `
-    const user = {
-      name: freelancer.name,
-      email: freelancer.email,
+      const user = {
+        name: freelancer.name,
+        email: freelancer.email,
+      }
+      console.log("mail sending is progress............");
+      proposalMail(user, subject, message);
     }
-    console.log("mail sending is progress............");
-    proposalMail(user, subject, message);
   }
   catch (err) {
     console.log(err);

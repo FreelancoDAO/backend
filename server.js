@@ -186,14 +186,17 @@ io.on("connection", async (socket) => {
 
     // if no => create a new OneToOneMessage doc & emit event "start_chat" & send conversation details as payload
     if (existing_conversations.length === 0) {
+      const freelancer = await Freelancer.findOne({
+        wallet_address: to,
+      });
       let new_chat = await OneToOneMessage.create({
         participants: [to, from],
         gig_token_id: gigId,
       });
       updated_conversations.push(new_chat);
-
+      const d = [{ ...new_chat._doc, freelancer }]
       console.log("up", updated_conversations);
-      callback(updated_conversations);
+      callback(d);
 
       // new_chat = await OneToOneMessage.findById(new_chat).populate(
       //   "participants",

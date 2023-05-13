@@ -20,20 +20,28 @@ const createProposal = async (data) => {
 
       const existing_conversations = await OneToOneMessage.find({
         participants: { $size: 2, $all: [data?.freelancer_address, data?.client_address] },
-        offer_id: data?.offerId
+        gig_token_id: data.gig_token_id
       });
 
+      const existing_conversations_with_offerId = existing_conversations.filter(convo => {
+        if (convo.offer_id) {
+          return true;
+        }
+      });
+      console.log("count",existing_conversations_with_offerId.length);
       const new_message = {
         to: data.freelancer_address,
         from: data.client_address,
         type: 'Offer',
         created_at: Date.now(),
-        text: `proposal created with offer id ${data?.offerId} and amount ${data?.total_charges}`,
+        // text: `proposal created with  and amount ${data?.total_charges}`,
+        text: `Hi ${data.freelancer_address} , After reviewing your profile, I am pleased to offer you the opportunity to work on this project.
+        The project deadline is ${data.deadline} and my budget for this project is ${data.total_charges} Matic. Please confirm by Accepting that you are available to work on this project within these terms. Additionally, I would like to highlight the following terms and conditions that will apply to our work: ${data.terms}`
       };
       console.log("existi", existing_conversations);
 
       let updates_convo;
-      if (existing_conversations.length === 0) {
+      if (existing_conversations.length === 0 || existing_conversations_with_offerId.length != 0) {
         updates_convo = await OneToOneMessage.create({
           participants: [data.client_address, data.freelancer_address],
           gig_token_id: data.gig_token_id,
@@ -64,6 +72,11 @@ const createProposal = async (data) => {
       await addNotification({
         wallet_address: data?.freelancer_address,
         message: `congrats ! you have received a new proposal from ${data.client_address}`,
+        link: '/messages/123',
+      });
+      await addNotification({
+        wallet_address: data?.client_address,
+        message: `congrats ! you have created a new proposal with ${data.freelancer_address}`,
         link: '/messages/123',
       });
       proposalMail(user, subject, message);
