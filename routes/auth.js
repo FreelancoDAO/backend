@@ -10,6 +10,7 @@ const {
   moralisVerify,
   emailVerify,
   emailVerified,
+  socialLogin
 } = require("../controllers/auth");
 
 /*
@@ -18,6 +19,7 @@ const {
 router.post("/register", register);
 // router.post("/validateUser", validateUser);
 router.get("/login", login);
+router.post("/socialLogin", socialLogin);
 router.post("/request-message", moralisLogin);
 router.post("/verify", moralisVerify);
 router.post("/verify-email", verifyToken, emailVerify);

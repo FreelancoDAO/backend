@@ -4,6 +4,96 @@ const mongoose = require("mongoose");
 const Freelancer = require("../../models/freelancer");
 const Gig = require("../../models/gig");
 
+
+// const getProposalByStatus = async (req, res) => {
+//   try {
+//     const pipeline = [];
+
+//     if (req.body.gig_token_id != null) {
+//       pipeline.push(
+//         {
+//           $match: {
+//             freelancer_address: req.user.wallet_address,
+//             gig_token_id: req.body.gig_token_id,
+//             isDeleted: false,
+//             isActive: true
+//           }
+//         }
+//       );
+//     } else {
+//       pipeline.push(
+//         {
+//           $match: {
+//             client_address: req.user.wallet_address,
+//             isDeleted: false,
+//             isActive: true
+//           }
+//         }
+//       );
+//     }
+
+//     pipeline.push(
+//       {
+//         $lookup: {
+//           from: "gigs",
+//           localField: "gig_token_id",
+//           foreignField: "tokenId",
+//           as: "gig_detail"
+//         }
+//       }
+//     );
+
+//     if (req.body.gig_token_id != null) {
+//       pipeline.push(
+//         {
+//           $lookup: {
+//             from: "users",
+//             localField: "client_address",
+//             foreignField: "wallet_address",
+//             as: "user"
+//           }
+//         }
+//       );
+//     } else {
+//       pipeline.push(
+//         {
+//           $lookup: {
+//             from: "freelancers",
+//             localField: "freelancer_address",
+//             foreignField: "wallet_address",
+//             as: "freelancer"
+//           }
+//         }
+//       );
+
+//       pipeline.push(
+//         {
+//           $addFields: {
+//             gig_detail: {
+//               $mergeObjects: [
+//                 { $arrayElemAt: ["$gig_detail", 0] },
+//                 {
+//                   freelancer: {
+//                     $arrayElemAt: ["$freelancer", 0]
+//                   }
+//                 }
+//               ]
+//             }
+//           }
+//         }
+//       );
+//     }
+
+//     const proposalWithUserData = await Proposal.aggregate(pipeline);
+//     console.log("proposalWithUserData", proposalWithUserData);
+//     res.status(200).json(proposalWithUserData);
+//   } catch (error) {
+//     console.log(error);
+//     res.status(500).json({ message: "Something went wrong" });
+//   }
+// };
+// module.exports = { getProposalByStatus };
+
 const getProposalByStatus = async (req, res) => {
   try {
     console.log("PRPOSAL");
@@ -72,6 +162,7 @@ const getProposalByStatus = async (req, res) => {
         return proposalData;
       })
     );
+    console.log("proposalWithUserData", proposalWithUserData);
     res.status(200).json(proposalWithUserData);
   } catch (error) {
     console.log(error);

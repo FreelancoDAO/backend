@@ -4,6 +4,7 @@ const { addNotification } = require("../../controllers/notification");
 const Gig = require("../../models/gig");
 const Proposal = require("../../models/proposal");
 const OneToOneMessage = require("../../models/oneToOneMessage");
+const Analytics = require("../../models/analytics");
 
 const sentProposalUpdateOverMail = async (data) => {
   try {
@@ -40,6 +41,14 @@ const sentProposalUpdateOverMail = async (data) => {
         { offerId: data.offerId },
         { $set: { status: updateStatusMappig[data.status] } },
         { new: true }
+      );
+      const status = updateStatusMappig[data.status];
+      const updateObject = { $inc: { [status]: 1 } };
+
+      await Analytics.updateOne(
+        { wallet_address: proposal.freelancer_address },
+        updateObject,
+        { upsert: true }
       );
 
       const new_message = {

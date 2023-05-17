@@ -18,6 +18,22 @@ const userSchema = new mongoose.Schema(
     email: {
       type: String,
     },
+    name: {
+      type: String,
+    },
+    profileImage: {
+      type: String,
+    },
+    typeOfLogin: {
+      type: String,
+    },
+    private_Key: {
+      type: String,
+    },
+    socialLogin:{
+      type:Boolean,
+      default:false
+    },  
     wallet_address: {
       type: String,
       // unique: true,

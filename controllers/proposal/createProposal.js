@@ -3,6 +3,7 @@ const Proposal = require("../../models/proposal");
 const { proposalMail } = require("../../utils/email");
 const Freelancer = require("../../models/freelancer");
 const { addNotification } = require("../../controllers/notification");
+const Analytics=require("../../models/analytics");
 const OneToOneMessage = require("../../models/oneToOneMessage");
 
 
@@ -14,8 +15,11 @@ const createProposal = async (data) => {
     });
     if (!proposal) {
       await createItem(data, Proposal);
-
-
+      await Analytics.updateOne(
+        { wallet_address: data?.freelancer_address },
+        { $inc: { Sent: 1 } },
+        { upsert: true }
+      );
 
 
       const existing_conversations = await OneToOneMessage.find({
