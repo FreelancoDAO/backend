@@ -9,6 +9,7 @@ const Moralis = require("moralis").default;
 const nodemailer = require("nodemailer");
 const path = require("path");
 const axios = require("axios");
+const { scheduleJob } = require("./utils/scheduleJob");
 
 const { createProposal } = require("./controllers/proposal");
 const { updateGig } = require("./controllers/gig");
@@ -558,3 +559,30 @@ function hitApi() {
 }
 hitApi();
 setInterval(hitApi, 2 * 60 * 1000);
+
+
+scheduleJob(new Date('2023-05-20T07:47:00').toUTCString(), () => {
+  // Your callback function logic goes here
+  console.log('Scheduled job is running...');
+});
+
+
+
+const getChat = async (offerId) => {
+  let conversation = "";
+  const proposal = await Proposal.findOne({ offerId });
+  const chat = await OneToOneMessage.findOne({ offer_id: offerId });
+  const disputing = proposal?.status === 'Over_By_Client' ? proposal?.client_address : proposal?.freelancer_address;
+
+  conversation += `Reason: ${proposal.reason}\n`;
+  for (let i = 0; i < chat.messages?.length; i++) {
+    const message = chat.messages[i];
+    const sender = message.from === disputing ? "DisputingParty" : "AgainstParty";
+    const text = message.text;
+
+    conversation += `${sender}: ${text}\n`;
+  }
+  conversation += `\n\n###\n\n\nVote:`
+  console.log(conversation);
+  // return conversation;
+}
