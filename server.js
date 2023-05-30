@@ -593,4 +593,4 @@ const getChat = async (offerId) => {
   // return conversation;
 }
 
-getChat('0xbd170990b8719a65cebebac0341062e6324ff9127e9b12b24fdd3b5114f3a299');
+// getChat('0xbd170990b8719a65cebebac0341062e6324ff9127e9b12b24fdd3b5114f3a299');
