@@ -84,11 +84,13 @@ app.use("/images", express.static(__dirname + "/uploads"));
 
 // Setup express server port from ENV, default: 3000
 const port = process.env.PORT || 4080;
-const https = require("https");
-const server = https.createServer({
-  key: fs.readFileSync(path.join(__dirname, 'certificates', 'key.pem')),
-  cert: fs.readFileSync(path.join(__dirname, 'certificates', 'cert.pem'))
-}, app);
+const http = require("http");
+const server = http.createServer(
+//   {
+//   key: fs.readFileSync(path.join(__dirname, 'certificates', 'key.pem')),
+//   cert: fs.readFileSync(path.join(__dirname, 'certificates', 'cert.pem'))
+// },
+ app);
 const { Server } = require("socket.io"); // Add this
 
 // const IPFS = require("ipfs");
