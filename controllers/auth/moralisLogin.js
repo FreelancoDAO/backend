@@ -15,7 +15,7 @@ const moralisLogin = async (req, res) => {
   const config = {
     domain: "free",
     statement: "Please sign this message to confirm your identity.",
-    uri: "https://freelanco.com",
+    uri: "https://freelanco.in",
     timeout: 60,
   };
 

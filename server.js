@@ -7,9 +7,9 @@ const app = express();
 const { printRequestData, errorHandler } = require("./middleware/api");
 const Moralis = require("moralis").default;
 const nodemailer = require("nodemailer");
+const fs = require("fs");
 const path = require("path");
 const axios = require("axios");
-const { scheduleJob } = require("./utils/scheduleJob");
 
 const { createProposal } = require("./controllers/proposal");
 const { updateGig } = require("./controllers/gig");
@@ -84,8 +84,11 @@ app.use("/images", express.static(__dirname + "/uploads"));
 
 // Setup express server port from ENV, default: 3000
 const port = process.env.PORT || 4080;
-const http = require("http");
-const server = http.createServer(app);
+const https = require("https");
+const server = https.createServer({
+  key: fs.readFileSync(path.join(__dirname, 'certificates', 'key.pem')),
+  cert: fs.readFileSync(path.join(__dirname, 'certificates', 'cert.pem'))
+}, app);
 const { Server } = require("socket.io"); // Add this
 
 // const IPFS = require("ipfs");
@@ -524,6 +527,14 @@ Freelanco_contract.on("ContractDisputed", (offerId, proposalId, reason) => {
         { new: true }
       ).then(async (result) => {
         await sentProposalUpdateOverMail(result);
+        setTimeout(() => {
+          // Your callback function logic goes here
+          console.log('Scheduled job is running...');
+        }, 10000);
+        // scheduleJob('60000', () => {
+        //   // Your callback function logic goes here
+        //   console.log('Scheduled job is running...');
+        // });
 
         console.log(`document updated`);
       });
@@ -547,24 +558,19 @@ Gig_contract.on("GigMinted", (freelancerAddress, tokenUri, tokenId) => {
   updateGig(freelancerAddress, tokenUri, Number(tokenId._hex));
 });
 
-function hitApi() {
-  axios
-    .get("http://127.0.0.1:10000/")
-    .then((response) => {
-      console.log("API response:", response.data);
-    })
-    .catch((error) => {
-      console.error("Error hitting API:", error);
-    });
-}
-hitApi();
-setInterval(hitApi, 2 * 60 * 1000);
+// function hitApi() {
+//   axios
+//     .get("http://127.0.0.1:10000/")
+//     .then((response) => {
+//       console.log("API response:", response.data);
+//     })
+//     .catch((error) => {
+//       console.error("Error hitting API:", error);
+//     });
+// }
+// hitApi();
+// setInterval(hitApi, 2 * 60 * 1000);
 
-
-scheduleJob(new Date('2023-05-20T07:47:00').toUTCString(), () => {
-  // Your callback function logic goes here
-  console.log('Scheduled job is running...');
-});
 
 
 
@@ -586,3 +592,5 @@ const getChat = async (offerId) => {
   console.log(conversation);
   // return conversation;
 }
+
+getChat('0xbd170990b8719a65cebebac0341062e6324ff9127e9b12b24fdd3b5114f3a299');
