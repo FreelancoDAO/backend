@@ -5,6 +5,8 @@ const { getProposalOfDao } = require("./getProposalOfDao");
 const { getTreasuryOfDao } = require("./getTreasuryOfDao");
 const { getOrders } = require("./getOrders");
 const { sentProposalUpdateOverMail } = require("./sentProposalUpdateOverMail");
+const { getChatbyOfferId } = require("./getChatbyOfferId");
+const { gptResponse } = require("./gptResponse");
 
 module.exports = {
   createProposal,
@@ -13,5 +15,7 @@ module.exports = {
   getProposalOfDao,
   getTreasuryOfDao,
   getOrders,
-  sentProposalUpdateOverMail
+  sentProposalUpdateOverMail,
+  getChatbyOfferId,
+  gptResponse
 };

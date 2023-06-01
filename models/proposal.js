@@ -56,6 +56,9 @@ const proposalSchema = new mongoose.Schema(
     offerId: {
       type: String,
     },
+    gpt_vote: {
+      type: String
+    },
     reason: {
       type: String,
     },

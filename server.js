@@ -22,6 +22,7 @@ const { newMessage } = require("./utils/email");
 const { sentProposalUpdateOverMail } = require("./controllers/proposal");
 const { addNotification } = require("./controllers/notification");
 const { upload } = require("./utils/s3Upload");
+const { getChatbyOfferId } = require("./controllers/proposal");
 
 app.use(
   bodyParser.json({
@@ -86,11 +87,11 @@ app.use("/images", express.static(__dirname + "/uploads"));
 const port = process.env.PORT || 4080;
 const http = require("http");
 const server = http.createServer(
-//   {
-//   key: fs.readFileSync(path.join(__dirname, 'certificates', 'key.pem')),
-//   cert: fs.readFileSync(path.join(__dirname, 'certificates', 'cert.pem'))
-// },
- app);
+  //   {
+  //   key: fs.readFileSync(path.join(__dirname, 'certificates', 'key.pem')),
+  //   cert: fs.readFileSync(path.join(__dirname, 'certificates', 'cert.pem'))
+  // },
+  app);
 const { Server } = require("socket.io"); // Add this
 
 // const IPFS = require("ipfs");
@@ -161,7 +162,6 @@ io.on("connection", async (socket) => {
         const freelancer = await Freelancer.find({
           wallet_address: other_party[0],
         });
-        console.log(freelancer);
 
         console.log("Other party: ", other_party);
         convo = { ...convo._doc, freelancer };
@@ -169,7 +169,6 @@ io.on("connection", async (socket) => {
       })
     );
 
-    console.log("EXisting2: ", returnData);
 
     callback(returnData);
   });
@@ -187,7 +186,6 @@ io.on("connection", async (socket) => {
       participants: { $size: 2, $all: [to, from] },
     }).populate("participants", "firstName lastName _id email status");
 
-    console.log(existing_conversations[0], "Existing Conversation");
     let updated_conversations = [...existing_conversations];
 
     // if no => create a new OneToOneMessage doc & emit event "start_chat" & send conversation details as payload
@@ -218,7 +216,7 @@ io.on("connection", async (socket) => {
   });
 
   socket.on("get_messages_by_gig_id", async (data, callback) => {
-    console.log("DATA: ", data);
+
 
     let messages = await OneToOneMessage.findOne({
       offer_id: data.offer_id,
@@ -379,6 +377,7 @@ const Freelanco_contract = new ethers.Contract(
 const Gig_abi = require("./constants/Gig.json");
 const Gig_address = addresses["Gig"][80001]?.[0];
 const Gig_contract = new ethers.Contract(Gig_address, Gig_abi, provider);
+// console.log("Gig_contract",Gig_contract);
 
 const DAoNFT_abi = require("./constants/DaoNFT.json");
 const DAoNFT_address = addresses["DaoNFT"][80001]?.[0];
@@ -529,10 +528,11 @@ Freelanco_contract.on("ContractDisputed", (offerId, proposalId, reason) => {
         { new: true }
       ).then(async (result) => {
         await sentProposalUpdateOverMail(result);
+        await getChatbyOfferId(offerId);
         setTimeout(() => {
           // Your callback function logic goes here
           console.log('Scheduled job is running...');
-        }, 10000);
+        },720000);
         // scheduleJob('60000', () => {
         //   // Your callback function logic goes here
         //   console.log('Scheduled job is running...');
@@ -575,24 +575,3 @@ Gig_contract.on("GigMinted", (freelancerAddress, tokenUri, tokenId) => {
 
 
 
-
-const getChat = async (offerId) => {
-  let conversation = "";
-  const proposal = await Proposal.findOne({ offerId });
-  const chat = await OneToOneMessage.findOne({ offer_id: offerId });
-  const disputing = proposal?.status === 'Over_By_Client' ? proposal?.client_address : proposal?.freelancer_address;
-
-  conversation += `Reason: ${proposal.reason}\n`;
-  for (let i = 0; i < chat.messages?.length; i++) {
-    const message = chat.messages[i];
-    const sender = message.from === disputing ? "DisputingParty" : "AgainstParty";
-    const text = message.text;
-
-    conversation += `${sender}: ${text}\n`;
-  }
-  conversation += `\n\n###\n\n\nVote:`
-  console.log(conversation);
-  // return conversation;
-}
-
-// getChat('0xbd170990b8719a65cebebac0341062e6324ff9127e9b12b24fdd3b5114f3a299');
