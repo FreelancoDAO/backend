@@ -549,7 +549,6 @@ Freelanco_contract.on("ContractDisputed", (offerId, proposalId, reason) => {
           data.proposalId,
           {
             gasLimit: 1_500_000,
-            from: address,
           }
         );
 
