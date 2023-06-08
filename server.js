@@ -537,7 +537,7 @@ Freelanco_contract.on("ContractDisputed", (offerId, proposalId, reason) => {
         { new: true }
       ).then(async (result) => {
         await sentProposalUpdateOverMail(result);
-        await getChatbyOfferId(offerId);
+        await getChatbyOfferId(offerId, data?.reason);
 
         setTimeout(async () => {
           // Your callback function logic goes here
@@ -579,15 +579,15 @@ Gig_contract.on("GigMinted", (freelancerAddress, tokenUri, tokenId) => {
   updateGig(freelancerAddress, tokenUri, Number(tokenId._hex));
 });
 
-function hitApi() {
-  axios
-    .get("http://127.0.0.1:10000/")
-    .then((response) => {
-      console.log("API response:", response.data);
-    })
-    .catch((error) => {
-      console.error("Error hitting API:", error);
-    });
-}
-hitApi();
-setInterval(hitApi, 2 * 60 * 1000);
+// function hitApi() {
+//   axios
+//     .get("http://127.0.0.1:10000/")
+//     .then((response) => {
+//       console.log("API response:", response.data);
+//     })
+//     .catch((error) => {
+//       console.error("Error hitting API:", error);
+//     });
+// }
+// hitApi();
+// setInterval(hitApi, 2 * 60 * 1000);
