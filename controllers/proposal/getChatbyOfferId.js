@@ -11,17 +11,19 @@ const getChatbyOfferId = async (offerId) => {
   prompt += `Reason: ${proposal.reason}\n`;
   for (let i = 0; i < chat.messages?.length; i++) {
     const message = chat.messages[i];
-    const sender = message.from === proposal?.freelancer_address ? "Freelancer" : "Client";
+    const sender =
+      message.from === proposal?.freelancer_address ? "Freelancer" : "Client";
     const text = message.text;
 
     prompt += `${sender}: ${text}\n`;
   }
-  prompt += `\n\n###\n\n\nVote:`
-  console.log(prompt);
+  prompt += `\n\n###\n\n\nVote:`;
+  console.log("PROMPT", prompt);
   const gpt_response = await gptVoting(prompt);
-  await Proposal.findOneAndUpdate({ _id: proposal._id }, { gpt_vote: gpt_response });
+  await Proposal.findOneAndUpdate(
+    { _id: proposal._id },
+    { gpt_vote: gpt_response }
+  );
+};
 
-}
-
-module.exports = { getChatbyOfferId }
-
+module.exports = { getChatbyOfferId };

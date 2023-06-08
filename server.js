@@ -537,41 +537,24 @@ Freelanco_contract.on("ContractDisputed", (offerId, proposalId, reason) => {
         { new: true }
       ).then(async (result) => {
         await sentProposalUpdateOverMail(result);
-        // await getChatbyOfferId(offerId);
-        console.log("SENDING GPT VOTE");
+        await getChatbyOfferId(offerId);
 
-        const requestTx = await GovernorContract_contract.executeRequest(
-          "return Functions.encodeUint256(1);",
-          [],
-          [data.proposalId], // Chainlink Functions request args
-          1318, // Subscription ID
-          300000, // Gas limit for the transaction
-          data.proposalId,
-          {
-            gasLimit: 1_500_000,
-          }
-        );
-
-        console.log("TX: ", requestTx);
-        // exec(
-        //   `cd sc && npx hardhat functions-request --network polygonMumbai --contract 0xc35E1144242cfA6DfB74B6f1090ba15f938BE85c --subid 1318 --propid ${data?.proposalId}`,
-        //   (error, stdout, stderr) => {
-        //     if (error) {
-        //       console.error(`exec error: ${error}`);
-        //       return;
-        //     }
-        //     console.log(`stdout: ${stdout}`);
-        //     console.error(`stderr: ${stderr}`);
-        //   }
-        // );
-        // setTimeout(() => {
-        //   // Your callback function logic goes here
-        //   console.log('Scheduled job is running...');
-        // },720000);
-        // // scheduleJob('60000', () => {
-        //   // Your callback function logic goes here
-        //   console.log('Scheduled job is running...');
-        // });
+        setTimeout(async () => {
+          // Your callback function logic goes here
+          console.log("Scheduled job is running...");
+          console.log("SENDING GPT VOTE");
+          await GovernorContract_contract.executeRequest(
+            "return Functions.encodeUint256(1);",
+            [],
+            [data.proposalId], // Chainlink Functions request args
+            1318, // Subscription ID
+            300000, // Gas limit for the transaction
+            data.proposalId,
+            {
+              gasLimit: 1_500_000,
+            }
+          );
+        }, 720000); //after voting period and voting delay
 
         console.log(`document updated`);
       });
