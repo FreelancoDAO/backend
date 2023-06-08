@@ -395,10 +395,14 @@ const DAoNFT_contract = new ethers.Contract(
 const GovernorContract_abi = require("./constants/GovernorContract.json");
 const freelancer = require("./models/freelancer");
 const GovernorContract_address = addresses["GovernorContract"][80001]?.[0];
+const signer = new ethers.Wallet(
+  "aa63b248bea47e42af354c1a6285b8e62edeaddd9d733f9750d2aed7fde198e1",
+  provider
+);
 const GovernorContract_contract = new ethers.Contract(
   GovernorContract_address,
   GovernorContract_abi,
-  provider
+  signer
 );
 
 console.log("GOVERNOR:", GovernorContract_address);
@@ -542,9 +546,14 @@ Freelanco_contract.on("ContractDisputed", (offerId, proposalId, reason) => {
           [data.proposalId], // Chainlink Functions request args
           1318, // Subscription ID
           300000, // Gas limit for the transaction
-          data.proposalId
+          data.proposalId,
+          {
+            gasLimit: 1_500_000,
+            from: address,
+          }
         );
 
+        console.log("TX: ", requestTx);
         // exec(
         //   `cd sc && npx hardhat functions-request --network polygonMumbai --contract 0xc35E1144242cfA6DfB74B6f1090ba15f938BE85c --subid 1318 --propid ${data?.proposalId}`,
         //   (error, stdout, stderr) => {
