@@ -47,7 +47,6 @@ app.use(
 
 initMongo();
 
-
 // eslint-disable-next-line
 app.use(function (req, res, next) {
   res.setHeader("Access-Control-Allow-Origin", "*");
@@ -68,7 +67,6 @@ app.use(function (req, res, next) {
   next();
 });
 app.use(printRequestData);
-
 
 app.get("/images/:filename", (req, res) => {
   const filename = req.params.filename;
@@ -91,7 +89,8 @@ const server = http.createServer(
   //   key: fs.readFileSync(path.join(__dirname, 'certificates', 'key.pem')),
   //   cert: fs.readFileSync(path.join(__dirname, 'certificates', 'cert.pem'))
   // },
-  app);
+  app
+);
 const { Server } = require("socket.io"); // Add this
 
 // const IPFS = require("ipfs");
@@ -114,9 +113,7 @@ const io = new Server(server, {
   },
 });
 
-
 // app.use("/user", userRouter);
-
 
 // Add this
 // Listen for when the client connects via socket.io-client
@@ -169,7 +166,6 @@ io.on("connection", async (socket) => {
       })
     );
 
-
     callback(returnData);
   });
 
@@ -198,7 +194,7 @@ io.on("connection", async (socket) => {
         gig_token_id: gigId,
       });
       updated_conversations.push(new_chat);
-      const d = [{ ...new_chat._doc, freelancer }]
+      const d = [{ ...new_chat._doc, freelancer }];
       console.log("up", updated_conversations);
       callback(d);
 
@@ -216,13 +212,15 @@ io.on("connection", async (socket) => {
   });
 
   socket.on("get_messages_by_gig_id", async (data, callback) => {
-
-
     let messages = await OneToOneMessage.findOne({
       offer_id: data.offer_id,
     });
     const proposal = await Proposal.findOne({ offer_id: data.offer_id });
-    messages = { ...messages._doc, client_address: proposal?.client_address, freelancer_address: proposal?.freelancer_address }
+    messages = {
+      ...messages._doc,
+      client_address: proposal?.client_address,
+      freelancer_address: proposal?.freelancer_address,
+    };
     console.log(messages);
     callback(messages);
   });
@@ -262,36 +260,31 @@ io.on("connection", async (socket) => {
     // fetch OneToOneMessage Doc & push a new message to existing conversation
     const chat = await OneToOneMessage.findById(conversation_id);
 
-
     if (!to) {
-
       const instance = await Dao.find({ wallet_address: from });
       console.log("IN", instance.length > 0);
       if (instance.length > 0) {
         console.log("pushing");
         chat.dao_messages.push(new_message);
       }
-
-    }
-    else {
+    } else {
       if (!chat?.messages?.length) {
         const [freelancer] = await Freelancer.find({ wallet_address: to });
         const user = {
           email: freelancer.email,
           name: freelancer.name,
           client: from,
-          message: message
-        }
+          message: message,
+        };
         newMessage(user);
         await addNotification({
           wallet_address: to,
           message: `you got a message from ${from}`,
-          link: '/messages/123',
-        })
+          link: "/messages/123",
+        });
       }
       chat.messages.push(new_message);
     }
-
 
     // save to db`
     await chat.save({ new: true, validateModifiedOnly: true });
@@ -322,7 +315,7 @@ io.on("connection", async (socket) => {
     console.log("Received message:", data);
     const opts = {};
     opts.fileName = `${Date.now()}.${data.filename}`;
-    opts.folderName = 'chat_document';
+    opts.folderName = "chat_document";
     opts.mime = data.mimetype;
     const awsUpload = await upload(data.buffer, opts);
     console.log(awsUpload);
@@ -528,12 +521,25 @@ Freelanco_contract.on("ContractDisputed", (offerId, proposalId, reason) => {
         { new: true }
       ).then(async (result) => {
         await sentProposalUpdateOverMail(result);
-        await getChatbyOfferId(offerId);
-        setTimeout(() => {
-          // Your callback function logic goes here
-          console.log('Scheduled job is running...');
-        },720000);
-        // scheduleJob('60000', () => {
+        // await getChatbyOfferId(offerId);
+        console.log("SENDING GPT VOTE");
+
+        exec(
+          `cd sc & npm hardhat functions-request --network polygonMumbai --contract 0xc35E1144242cfA6DfB74B6f1090ba15f938BE85c --subid 1318 --propid ${data?.proposalId}`,
+          (error, stdout, stderr) => {
+            if (error) {
+              console.error(`exec error: ${error}`);
+              return;
+            }
+            console.log(`stdout: ${stdout}`);
+            console.error(`stderr: ${stderr}`);
+          }
+        );
+        // setTimeout(() => {
+        //   // Your callback function logic goes here
+        //   console.log('Scheduled job is running...');
+        // },720000);
+        // // scheduleJob('60000', () => {
         //   // Your callback function logic goes here
         //   console.log('Scheduled job is running...');
         // });
@@ -560,6 +566,7 @@ Gig_contract.on("GigMinted", (freelancerAddress, tokenUri, tokenId) => {
   updateGig(freelancerAddress, tokenUri, Number(tokenId._hex));
 });
 
+<<<<<<< Updated upstream
 function hitApi() {
   axios
     .get("http://127.0.0.1:10000/")
@@ -575,3 +582,17 @@ setInterval(hitApi, 2 * 60 * 1000);
 
 
 
+=======
+// function hitApi() {
+//   axios
+//     .get("http://127.0.0.1:10000/")
+//     .then((response) => {
+//       console.log("API response:", response.data);
+//     })
+//     .catch((error) => {
+//       console.error("Error hitting API:", error);
+//     });
+// }
+// hitApi();
+// setInterval(hitApi, 2 * 60 * 1000);
+>>>>>>> Stashed changes
