@@ -8,7 +8,7 @@ const {
   getProposalOfDao,
   getTreasuryOfDao,
   getOrders,
-  gptResponse
+  gptResponse,
 } = require("../controllers/proposal");
 
 router.post("/", verifyToken, createProposal);
@@ -18,6 +18,6 @@ router.get("/getProposalsOfClient", verifyToken, getProposalByStatus);
 router.get("/getProposolsOfDao", getProposalOfDao);
 router.get("/getDaoTreasury", getTreasuryOfDao);
 router.get("/getOrders", verifyToken, getOrders);
-router.get("/gptResponse", gptResponse);
+router.post("/gptResponse", gptResponse);
 
 module.exports = router;
