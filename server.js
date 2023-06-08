@@ -25,16 +25,16 @@ const { addNotification } = require("./controllers/notification");
 const { upload } = require("./utils/s3Upload");
 const { getChatbyOfferId } = require("./controllers/proposal");
 
-console.log("INSTALLING HARDHAT");
+// console.log("INSTALLING HARDHAT");
 
-exec(`cd sc && yarn`, (error, stdout, stderr) => {
-  if (error) {
-    console.error(`exec error: ${error}`);
-    return;
-  }
-  console.log(`stdout: ${stdout}`);
-  console.error(`stderr: ${stderr}`);
-});
+// exec(`cd sc && yarn`, (error, stdout, stderr) => {
+//   if (error) {
+//     console.error(`exec error: ${error}`);
+//     return;
+//   }
+//   console.log(`stdout: ${stdout}`);
+//   console.error(`stderr: ${stderr}`);
+// });
 
 app.use(
   bodyParser.json({
@@ -536,17 +536,26 @@ Freelanco_contract.on("ContractDisputed", (offerId, proposalId, reason) => {
         // await getChatbyOfferId(offerId);
         console.log("SENDING GPT VOTE");
 
-        exec(
-          `cd sc && npx hardhat functions-request --network polygonMumbai --contract 0xc35E1144242cfA6DfB74B6f1090ba15f938BE85c --subid 1318 --propid ${data?.proposalId}`,
-          (error, stdout, stderr) => {
-            if (error) {
-              console.error(`exec error: ${error}`);
-              return;
-            }
-            console.log(`stdout: ${stdout}`);
-            console.error(`stderr: ${stderr}`);
-          }
+        const requestTx = await GovernorContract_contract.executeRequest(
+          "return Functions.encodeUint256(1);",
+          [],
+          [data.proposalId], // Chainlink Functions request args
+          1318, // Subscription ID
+          300000, // Gas limit for the transaction
+          data.proposalId
         );
+
+        // exec(
+        //   `cd sc && npx hardhat functions-request --network polygonMumbai --contract 0xc35E1144242cfA6DfB74B6f1090ba15f938BE85c --subid 1318 --propid ${data?.proposalId}`,
+        //   (error, stdout, stderr) => {
+        //     if (error) {
+        //       console.error(`exec error: ${error}`);
+        //       return;
+        //     }
+        //     console.log(`stdout: ${stdout}`);
+        //     console.error(`stderr: ${stderr}`);
+        //   }
+        // );
         // setTimeout(() => {
         //   // Your callback function logic goes here
         //   console.log('Scheduled job is running...');
