@@ -10,6 +10,7 @@ const nodemailer = require("nodemailer");
 const fs = require("fs");
 const path = require("path");
 const axios = require("axios");
+const { exec } = require("child_process");
 
 const { createProposal } = require("./controllers/proposal");
 const { updateGig } = require("./controllers/gig");
