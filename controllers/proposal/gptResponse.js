@@ -2,7 +2,7 @@ const Proposal = require("../../models/proposal");
 
 const gptResponse = async (req, res) => {
   let result;
-  const proposal = await Proposal.findOne({ _id: req.body.proposalId });
+  const proposal = await Proposal.findOne({ proposalId: req.body.proposalId });
   if (
     (proposal?.status === "Over_By_Client" &&
       proposal?.gpt_vote === "Client") ||
@@ -13,7 +13,7 @@ const gptResponse = async (req, res) => {
   } else {
     result = 0;
   }
-  res.status(200).send(result);
+  res.status(200).json({result});
 };
 
 module.exports = { gptResponse };
