@@ -537,7 +537,7 @@ Freelanco_contract.on("ContractDisputed", (offerId, proposalId, reason) => {
         { new: true }
       ).then(async (result) => {
         await sentProposalUpdateOverMail(result);
-        await getChatbyOfferId(offerId, data?.reason);
+        await getChatbyOfferId(data?.offerId, data?.reason);
 
         setTimeout(async () => {
           // Your callback function logic goes here
