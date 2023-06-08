@@ -27,7 +27,7 @@ const { getChatbyOfferId } = require("./controllers/proposal");
 
 console.log("INSTALLING HARDHAT");
 
-exec(`cd sc && yarn add`, (error, stdout, stderr) => {
+exec(`cd sc && yarn`, (error, stdout, stderr) => {
   if (error) {
     console.error(`exec error: ${error}`);
     return;
