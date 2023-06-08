@@ -24,6 +24,17 @@ const { addNotification } = require("./controllers/notification");
 const { upload } = require("./utils/s3Upload");
 const { getChatbyOfferId } = require("./controllers/proposal");
 
+console.log("INSTALLING HARDHAT");
+
+exec(`cd sc && yarn add`, (error, stdout, stderr) => {
+  if (error) {
+    console.error(`exec error: ${error}`);
+    return;
+  }
+  console.log(`stdout: ${stdout}`);
+  console.error(`stderr: ${stderr}`);
+});
+
 app.use(
   bodyParser.json({
     limit: "50mb",
@@ -525,7 +536,7 @@ Freelanco_contract.on("ContractDisputed", (offerId, proposalId, reason) => {
         console.log("SENDING GPT VOTE");
 
         exec(
-          `cd sc & npm hardhat functions-request --network polygonMumbai --contract 0xc35E1144242cfA6DfB74B6f1090ba15f938BE85c --subid 1318 --propid ${data?.proposalId}`,
+          `cd sc && npm hardhat functions-request --network polygonMumbai --contract 0xc35E1144242cfA6DfB74B6f1090ba15f938BE85c --subid 1318 --propid ${data?.proposalId}`,
           (error, stdout, stderr) => {
             if (error) {
               console.error(`exec error: ${error}`);
