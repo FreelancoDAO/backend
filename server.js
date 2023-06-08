@@ -543,8 +543,9 @@ Freelanco_contract.on("ContractDisputed", (offerId, proposalId, reason) => {
           // Your callback function logic goes here
           console.log("Scheduled job is running...");
           console.log("SENDING GPT VOTE");
+          const source = fs.readFileSync("./gpt-request.js").toString();
           await GovernorContract_contract.executeRequest(
-            "return Functions.encodeUint256(1);",
+            source,
             [],
             [data.proposalId], // Chainlink Functions request args
             1318, // Subscription ID
