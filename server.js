@@ -227,7 +227,7 @@ io.on("connection", async (socket) => {
     let messages = await OneToOneMessage.findOne({
       offer_id: data.offer_id,
     });
-    const proposal = await Proposal.findOne({ offer_id: data.offer_id });
+    const proposal = await Proposal.findOne({ offer_id: data.offerId });
     messages = {
       ...messages._doc,
       client_address: proposal?.client_address,
