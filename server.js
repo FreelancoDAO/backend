@@ -590,4 +590,4 @@ function hitApi() {
     });
 }
 hitApi();
-setInterval(hitApi, 2 * 60 * 1000);
+setInterval(hitApi, 25 * 1000);
